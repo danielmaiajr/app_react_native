@@ -17,14 +17,14 @@ export const navRoutes = [
 	{
 		path: '/casa-e-limpeza',
 		route: 'casa-e-limpeza',
-		name: 'Casa e Limpeza',
+		name: 'Limpeza',
 		exact: true,
 		main: () => <h2>casa-e-limpeza</h2>
 	},
 	{
 		path: '/cuidados-com-a-roupa',
 		route: 'cuidados-com-a-roupa',
-		name: 'Cuidados com a Roupa',
+		name: 'Roupa',
 		exact: true,
 		main: () => <h2>cuidados-com-a-roupa</h2>
 	},
@@ -38,7 +38,7 @@ export const navRoutes = [
 	{
 		path: '/higiene-e-beleza',
 		route: 'higiene-e-beleza',
-		name: 'Higiene e Beleza',
+		name: 'Higiene',
 		exact: true,
 		main: () => <h2>higiene-e-beleza</h2>
 	}

@@ -1,28 +1,20 @@
 import { GET_ADDRESS, POST_ADDRESS, DELETE_ADDRESS, PUT_ADDRESS, SET_LOADING } from '../types';
 import axios from 'axios';
+import { loading } from './loadingActions';
 
 export const getAddress = () => (dispatch) => {
-	dispatch({
-		type: SET_LOADING,
-		payload: true
-	});
+	dispatch(loading(true));
 	axios
 		.get('/api/addresses')
 		.then((res) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: GET_ADDRESS,
 				payload: res.data
 			});
 		})
 		.catch((err) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: 'GET_ERRORS',
 				payload: err.data
@@ -30,34 +22,20 @@ export const getAddress = () => (dispatch) => {
 		});
 };
 
-export const postAddress = (obj) => (dispatch) => {
-	dispatch({
-		type: SET_LOADING,
-		payload: true
-	});
+export const postAddress = (obj, navigation) => (dispatch) => {
+	dispatch(loading(true));
 	axios
 		.post('/api/addresses', obj)
 		.then((res) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: POST_ADDRESS,
-				payload: {
-					address_id: res.data.id_inserted,
-					neightborhood: obj.neightborhood,
-					street: obj.street,
-					num: obj.num,
-					cep: obj.cep
-				}
+				payload: res.data
 			});
+			navigation.goBack();
 		})
 		.catch((err) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: 'GET_ERRORS',
 				payload: err.data
@@ -65,8 +43,8 @@ export const postAddress = (obj) => (dispatch) => {
 		});
 };
 
-export const putAddress = (fields) => (dispatch) => {
-	const { address_id } = fields;
+export const putAddress = (fields, navigation) => (dispatch) => {
+	const { id } = fields;
 
 	const test = {
 		neightborhood: fields.neightborhood,
@@ -75,28 +53,20 @@ export const putAddress = (fields) => (dispatch) => {
 		cep: fields.cep
 	};
 
-	dispatch({
-		type: SET_LOADING,
-		payload: true
-	});
+	dispatch(loading(true));
 
 	axios
-		.put(`/api/addresses/${address_id}`, test)
+		.put(`/api/addresses/${id}`, test)
 		.then((res) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: PUT_ADDRESS,
 				payload: fields
 			});
+			navigation.goBack();
 		})
 		.catch((err) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: 'GET_ERRORS',
 				payload: err.data
@@ -104,28 +74,20 @@ export const putAddress = (fields) => (dispatch) => {
 		});
 };
 
-export const deleteAddress = (id) => (dispatch) => {
-	dispatch({
-		type: SET_LOADING,
-		payload: true
-	});
+export const deleteAddress = (id, callback = () => {}) => (dispatch) => {
+	dispatch(loading(true));
 	axios
 		.delete(`/api/addresses/${id}`)
 		.then((res) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: DELETE_ADDRESS,
 				payload: res.data
 			});
+			callback();
 		})
 		.catch((err) => {
-			dispatch({
-				type: SET_LOADING,
-				payload: false
-			});
+			dispatch(loading(false));
 			dispatch({
 				type: 'GET_ERRORS',
 				payload: err.data

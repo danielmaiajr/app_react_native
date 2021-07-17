@@ -18,7 +18,7 @@ export default function(state = initialState, action) {
 			};
 
 		case ADD_ITEMS_CART:
-			exist = items.find((i) => payload.product_id === i.product_id);
+			exist = items.find((i) => payload.id === i.id);
 			if (exist) {
 				const index = items.indexOf(exist);
 				items[index].quantity += 1;
@@ -38,7 +38,7 @@ export default function(state = initialState, action) {
 			}
 
 		case SUB_ITEMS_CART:
-			exist = items.find((i) => payload.product_id === i.product_id);
+			exist = items.find((i) => payload.id === i.id);
 			if (exist && exist.quantity > 1) {
 				const index = items.indexOf(exist);
 				items[index].quantity -= 1;
@@ -49,7 +49,7 @@ export default function(state = initialState, action) {
 				};
 			} else {
 				if (exist) {
-					const test = items.filter((a) => a.product_id !== exist.product_id);
+					const test = items.filter((a) => a.id !== exist.id);
 					//localStorage.setItem('cart', JSON.stringify(test));
 					return {
 						...state,

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { AntDesign } from '@expo/vector-icons';
+import React from 'react';
 
-import styled from 'styled-components/native';
-import { View, Text, TouchableOpacity, Button } from 'react-native';
+import { Entypo } from '@expo/vector-icons';
+
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
 import { addItemsCart, subItemsCart } from '../redux/actions/cartActions';
@@ -11,7 +12,7 @@ const Counter = (props) => {
 	const { product, addItemsCart, subItemsCart } = props;
 	const { cartItems } = props.cart;
 
-	const exist = cartItems.find((item) => item.product_id === product.product_id);
+	const exist = cartItems.find((item) => item.id === product.id);
 
 	const HandleSubItemsCart = () => {
 		subItemsCart(product);
@@ -23,38 +24,31 @@ const Counter = (props) => {
 	return (
 		<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 			{!exist ? (
-				<TouchableOpacity
-					onPress={HandleAddItemsCart}
-					style={{
-						flex: 1,
-						justifyContent: 'center',
-						alignItems: 'center',
-						marginTop: 15,
-						height: 35,
-						backgroundColor: '#4e3188',
-						borderRadius: 3
-					}}
-				>
-					<Text style={{ color: 'white' }}>Adicionar</Text>
-				</TouchableOpacity>
+				<View style={[ styles.containerButton, { backgroundColor: '#EA1D2C', borderColor: '#EA1D2C' } ]}>
+					<TouchableOpacity onPress={HandleAddItemsCart} style={[ styles.button, { padding: 7 } ]}>
+						<Text style={{ color: '#eee', fontSize: 16 }}>Adicionar</Text>
+					</TouchableOpacity>
+				</View>
 			) : (
-				<ContainerButton>
-					<TouchableOpacity
-						onPress={HandleSubItemsCart}
-						style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-					>
-						<AntDesign name="minus" size={18} color="black" />
+				<View style={styles.containerButton}>
+					<TouchableOpacity onPress={HandleSubItemsCart} style={styles.button}>
+						{exist.quantity === 1 ? (
+							<MaterialCommunityIcons name="delete" size={16} color="#c52b2b" />
+						) : (
+							<Entypo name="minus" size={18} color="red" />
+						)}
 					</TouchableOpacity>
-					<ContainerButtonQuantity>
-						<Text>{exist ? exist.quantity : 0}</Text>
-					</ContainerButtonQuantity>
-					<TouchableOpacity
-						onPress={HandleAddItemsCart}
-						style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-					>
-						<AntDesign name="plus" size={18} color="black" />
+
+					<View style={[ styles.button, { paddingVertical: 7, paddingHorizontal: 3 } ]}>
+						<Text style={{ flex: 1, fontWeight: 'bold', color: '#8a8a8a' }}>
+							{exist ? exist.quantity : 0}
+						</Text>
+					</View>
+
+					<TouchableOpacity onPress={HandleAddItemsCart} style={styles.button}>
+						<Entypo name="plus" size={18} color="#3E3E3E" />
 					</TouchableOpacity>
-				</ContainerButton>
+				</View>
 			)}
 		</View>
 	);
@@ -71,21 +65,21 @@ const mapDispatchToProps = {
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter);
 
-const ContainerButton = styled.View`
-	border-radius: 3px;
-	border: solid 1px #ccc;
-	flex: 1;
-	height: 35px;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	margin-top: 15px;
-`;
-
-const ContainerButtonQuantity = styled.Text`
-	color: #555;
-	flex: 1;
-	font-size: 16px;
-	font-weight: 500;
-	text-align: center;
-`;
+const styles = StyleSheet.create({
+	containerButton: {
+		width: '100%',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginVertical: 5,
+		borderWidth: 1,
+		borderColor: '#ddd',
+		borderRadius: 5
+	},
+	button: {
+		flex: 1,
+		height: '100%',
+		justifyContent: 'center',
+		alignItems: 'center'
+	}
+});

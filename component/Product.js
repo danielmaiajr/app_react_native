@@ -17,7 +17,46 @@ const Product = (props) => {
 					style={{ height: 100, width: 100 }}
 				/>
 			</View>
-			<Text style={{ textAlign: 'center', height: 47, padding: 5 }}>{product.product_name}</Text>
+			<View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 5 }}>
+				<Text
+					style={{
+						fontWeight: 'bold',
+						color: '#58595b'
+					}}
+				>
+					R${' '}
+				</Text>
+				<Text
+					style={{
+						color: '#58595b',
+						fontWeight: 'bold',
+						fontSize: 24,
+						letterSpacing: 1
+					}}
+				>
+					{product.price}
+				</Text>
+				<Text
+					style={{
+						letterSpacing: 1,
+						fontWeight: 'bold',
+						color: '#58595b'
+					}}
+				>
+					,98
+				</Text>
+			</View>
+			<View style={{ justifyContent: 'center', height: 60, margin: 10 }}>
+				<Text
+					style={{
+						textAlign: 'center',
+						color: '#58595b',
+						letterSpacing: 0.5
+					}}
+				>
+					{product.product_name}
+				</Text>
+			</View>
 			<Counter product={product} />
 		</ProductContent>
 	);
@@ -32,7 +71,7 @@ const ProductContent = styled.View`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 20px;
+	padding: 15px;
 	justify-content: flex-end;
 	width: 170px;
 	margin: 0 5px;

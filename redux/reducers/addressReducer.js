@@ -15,9 +15,9 @@ export default function(state = initialState, action) {
 
 		case PUT_ADDRESS:
 			exist = state.map((i) => {
-				if (i.address_id === payload.address_id) {
+				if (i.id === payload.id) {
 					return {
-						address_id: payload.address_id,
+						id: payload.id,
 						neightborhood: payload.neightborhood,
 						street: payload.street,
 						num: payload.num,
@@ -31,7 +31,7 @@ export default function(state = initialState, action) {
 			return exist;
 
 		case DELETE_ADDRESS:
-			exist = state.filter((a) => a.address_id.toString() !== payload.id_removed);
+			exist = state.filter((a) => a.id.toString() !== payload.id_removed);
 			return exist;
 
 		default:
@@ -40,6 +40,6 @@ export default function(state = initialState, action) {
 }
 
 /* console.log(payload);
-exist = state.filter((i) => payload.address_id !== i.address_id);
+exist = state.filter((i) => payload.id !== i.id);
 exist.push(payload);
 console.log(exist); */

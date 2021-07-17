@@ -1,26 +1,30 @@
 import { ADD_ITEMS_CART, SUB_ITEMS_CART, DELETE_CART_ITEM, CHANGE_SHOW_CART, GET_CART_ITEMS } from '../types';
 import axios from 'axios';
 
+import { loading } from './loadingActions';
 export const getCartItems = () => (dispatch) => {
+	dispatch(loading(true));
 	axios
-		.get('http://teststoreapp-com.umbler.net/api/cart-items')
+		.get('/api/cart-items')
 		.then((res) => {
+			dispatch(loading(false));
 			dispatch({
 				type: GET_CART_ITEMS,
 				payload: res.data
 			});
 		})
-		.catch((err) => [
+		.catch((err) => {
+			dispatch(loading(false));
 			dispatch({
 				type: 'GET_ERRORS',
 				payload: err.data
-			})
-		]);
+			});
+		});
 };
 
 export const addItemsCart = (item) => (dispatch) => {
 	axios
-		.put('http://teststoreapp-com.umbler.net/api/cart-items/add', { product_id: item.product_id })
+		.put('/api/cart-items/add', { id: item.id })
 		.then((res) => {
 			const product = {
 				...item,
@@ -41,7 +45,7 @@ export const addItemsCart = (item) => (dispatch) => {
 
 export const subItemsCart = (item) => (dispatch) => {
 	axios
-		.put('http://teststoreapp-com.umbler.net/api/cart-items/sub', { product_id: item.product_id })
+		.put('/api/cart-items/sub', { id: item.id })
 		.then((res) => {
 			const product = {
 				...item,
@@ -60,20 +64,22 @@ export const subItemsCart = (item) => (dispatch) => {
 		});
 };
 
-export const deleteItemsCart = () => (dispatch) => {
+export const deleteItemsCart = (callback = () => {}) => (dispatch) => {
 	axios
-		.delete('http://teststoreapp-com.umbler.net/api/cart-items')
+		.delete('/api/cart-items')
 		.then((res) => {
 			dispatch({
 				type: DELETE_CART_ITEM,
 				payload: []
 			});
+			callback();
 		})
 		.catch((err) => {
 			dispatch({
 				type: 'GET_ERRORS',
 				payload: err.response.data
 			});
+			callback();
 		});
 };
 

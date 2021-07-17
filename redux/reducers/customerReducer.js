@@ -1,7 +1,7 @@
 import { GET_CUSTOMER, PUT_CUSTOMER } from '../types';
 
 const initialState = {
-	email: 'asd',
+	email: '',
 	first_name: '',
 	last_name: '',
 	cpf: null,

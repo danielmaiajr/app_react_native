@@ -1,4 +1,5 @@
 export const SET_LOADING = 'SET_LOADING';
+export const SET_ERRORS = 'SET_ERRORS';
 
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 
@@ -11,7 +12,8 @@ export const SUB_ITEMS_CART = 'SUB_ITEMS_CART';
 export const DELETE_CART_ITEM = 'DELETE_CART_ITEM';
 export const CHANGE_SHOW_CART = 'CHANGE_SHOW_CART';
 
-export const GET_PRODUCT = 'GET_PRODUCT';
+export const GET_PRODUCT_HOME = 'GET_PRODUCT_HOME';
+export const GET_PRODUCT_SECTION = 'GET_PRODUCT_SECTION';
 
 export const GET_SEARCHNAV_RESULTS = 'GET_SEARCHNAV_RESULTS';
 export const GET_SEARCHPAGE_RESULTS = 'GET_SEARCHPAGE_RESULTS';
@@ -25,5 +27,3 @@ export const POST_ORDER = 'POST_ORDER';
 export const GET_ORDERS = 'GET_ORDERS';
 export const GET_ORDER = 'GET_ORDER';
 export const PUT_CANCEL_ORDER = 'PUT_CANCEL_ORDER';
-
-export const GET_ERRORS = 'GET_ERRORS';

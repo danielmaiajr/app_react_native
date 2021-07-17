@@ -1,82 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from 'react-native';
-import { TextInput } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-import {
-	Wrapper,
-	Content,
-	FormContent,
-	TitleContent,
-	Title,
-	SubTitle,
-	InputContent,
-	SmallLabel,
-	Input,
-	ButtonContent,
-	PoliceContent
-} from './style';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import { connect } from 'react-redux';
 import { loginUser } from '../../redux/actions/authActions';
 
-const Login = (props) => {
-	const [ email, setEmail ] = useState('');
-	const [ password, setPassword ] = useState('');
-	const { history } = props;
+import TextInputComponent from '../my_components/TextInputComponent';
+import ButtonComponent from '../my_components/ButtonComponent';
 
-	const HandleOnSubmit = () => {
-		props.loginUser({
+const validationSchema = yup.object().shape({
+	email: yup.string().email('*Email Inválido').required('*Email Obrigatório'),
+	password: yup.string().required('*Senha Obrigatória').min(3, '*Entre 3 e 20 caracteres')
+});
+
+const Login = (props) => {
+	const { loginUser } = props;
+	const { isLoading } = props.loading;
+
+	const loginErrors = props.errors;
+
+	const HandleOnSubmit = ({ email, password }) => {
+		loginUser({
 			email,
 			password
 		});
 	};
 
-	const HandleLink = (e) => {
-		e.preventDefault();
-		history.push('/register');
-	};
-
 	return (
-		<Wrapper>
-			<Content>
-				<FormContent>
-					<TitleContent>
-						<Title>Bem Vindo ao Market</Title>
-						<SubTitle>Faça Login para começar</SubTitle>
-					</TitleContent>
-					<InputContent>
-						<Input>
-							<TextInput placeholder="Email" value={email || ''} onChangeText={(val) => setEmail(val)} />
-						</Input>
-						<Input>
-							<TextInput
-								placeholder="Senha"
-								name="password"
-								value={password}
-								onChangeText={(val) => setPassword(val)}
-							/>
-						</Input>
-						<SmallLabel>Esqueceu a senha?</SmallLabel>
-					</InputContent>
-					<ButtonContent>
-						<Button
-							onPress={HandleOnSubmit}
-							title="Login"
-							color="#841584"
-							accessibilityLabel="Learn more about this purple button"
-						/>
-					</ButtonContent>
-					<PoliceContent>
-						*Ao continuar, você concorda com os Termos de Serviço e com a Política de Privacidade do Market
-					</PoliceContent>
-				</FormContent>
-			</Content>
-		</Wrapper>
+		<Formik
+			initialValues={{ email: '', password: '' }}
+			validationSchema={validationSchema}
+			onSubmit={(values) => HandleOnSubmit(values)}
+		>
+			{({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+				<View style={styles.container}>
+					{loginErrors.login && (
+						<View style={{ width: '90%' }}>
+							<Text style={styles.errorsText}>{loginErrors.login}</Text>
+						</View>
+					)}
+
+					<TextInputComponent
+						placeholder="Email"
+						name="email"
+						values={values}
+						handleBlur={handleBlur}
+						handleChange={handleChange}
+						touched={touched}
+						errors={errors}
+						autoCompleteType="email"
+					/>
+
+					<TextInputComponent
+						placeholder="Senha"
+						name="password"
+						values={values}
+						handleBlur={handleBlur}
+						handleChange={handleChange}
+						touched={touched}
+						errors={errors}
+						autoCompleteType="password"
+						secureTextEntry={true}
+					/>
+
+					<ButtonComponent onPress={handleSubmit} isLoading={isLoading}>
+						ENTRAR
+					</ButtonComponent>
+
+					<Text>ou</Text>
+
+					<ButtonComponent onPress={() => {}} type="secondary">
+						ENTRAR COM CELULAR
+					</ButtonComponent>
+				</View>
+			)}
+		</Formik>
 	);
 };
 
 const mapStateToProps = (state) => ({
-	auth: state.auth
+	loading: state.loading,
+	errors: state.errors
 });
 
 export default connect(mapStateToProps, { loginUser })(Login);
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		paddingVertical: 20,
+		alignItems: 'center',
+		backgroundColor: '#fff'
+	}
+});

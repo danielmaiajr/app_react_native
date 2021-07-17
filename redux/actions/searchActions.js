@@ -1,4 +1,4 @@
-import { GET_SEARCHNAV_RESULTS, GET_SEARCHPAGE_RESULTS } from '../types';
+import { GET_SEARCHNAV_RESULTS, GET_SEARCHPAGE_RESULTS, SET_LOADING } from '../types';
 import axios from 'axios';
 
 export const getSearchNavResults = (search) => (dispatch) => {
@@ -26,6 +26,10 @@ export const getSearchNavResults = (search) => (dispatch) => {
 };
 
 export const getSearchPageResults = (search, page) => (dispatch) => {
+	dispatch({
+		type: SET_LOADING,
+		payload: true
+	});
 	axios
 		.get(`/api/products/search?value=${search}&page=${page}`)
 		.then((res) => {
@@ -33,11 +37,15 @@ export const getSearchPageResults = (search, page) => (dispatch) => {
 				type: GET_SEARCHPAGE_RESULTS,
 				payload: res.data
 			});
+			dispatch({
+				type: SET_LOADING,
+				payload: false
+			});
 		})
 		.catch((err) => {
 			dispatch({
 				type: 'GET_ERRORS',
-				payload: err.data
+				payload: err.response.data
 			});
 		});
 };

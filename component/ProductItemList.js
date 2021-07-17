@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
-
-import { connect } from 'react-redux';
+import { Card } from 'react-native-paper';
 
 import Counter from './Counter';
 
-export const CartItem = (props) => {
+export const ProductItemList = (props) => {
 	const { product } = props;
 
 	return (
@@ -20,7 +19,7 @@ export const CartItem = (props) => {
 			<View style={styles.cartItemContainer}>
 				<Text style={styles.cartProductName}>{product.product_name}</Text>
 				<View style={styles.cartProductButton}>
-					<Text style={styles.cartProductPrice}>R$ {product.price}</Text>
+					<Text style={styles.cartProductPrice}>R$ {product.price},90</Text>
 					<Counter style={styles.cartProductCounter} product={product} css="cart" />
 				</View>
 			</View>
@@ -28,38 +27,39 @@ export const CartItem = (props) => {
 	);
 };
 
-const mapStateToProps = (state) => ({
-	cart: state.cart
-});
-
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CartItem);
+export default ProductItemList;
 
 const styles = StyleSheet.create({
+	container: {},
 	cartItem: {
-		backgroundColor: 'white',
-		width: '100%',
 		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'center',
-		fontSize: 16,
+		marginHorizontal: 15,
 		paddingHorizontal: 20,
-		paddingVertical: 10
+		marginVertical: 7,
+		backgroundColor: '#FFF',
+		borderWidth: 1,
+		borderRadius: 5,
+		borderColor: '#ddd'
 	},
 
 	cartImage: {
-		width: 60,
-		height: 60
+		width: 50,
+		height: 50
 	},
 
 	cartItemContainer: {
 		paddingLeft: 20,
+		marginVertical: 10,
 		flex: 1
 	},
 	cartProductName: {
-		height: 30,
-		lineHeight: 15
+		height: 44,
+		lineHeight: 22,
+		color: '#555',
+		fontSize: 16,
+		marginBottom: 10
 	},
 	cartProductButton: {
 		flex: 1,
@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignSelf: 'center',
 		justifyContent: 'center',
-		fontWeight: 'bold'
+		color: '#8a8a8a',
+		fontWeight: '500'
 	},
 	cartProductCounter: {
 		flex: 1

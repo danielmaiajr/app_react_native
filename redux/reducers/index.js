@@ -7,9 +7,11 @@ import orderReducer from './orderReducer';
 import searchReducer from './searchReducer';
 import customerReducer from './customerReducer';
 import loadingReducer from './loadingReducer';
+import errorsReducer from './errorsReducer';
 
 export default combineReducers({
 	loading: loadingReducer,
+	errors: errorsReducer,
 	auth: authReducer,
 	customer: customerReducer,
 	cart: cartReducer,

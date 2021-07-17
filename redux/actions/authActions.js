@@ -1,8 +1,11 @@
-import { GET_CURRENT_USER } from '../types';
+import jwt_decode from 'jwt-decode';
 import axios from 'axios';
+
+import { GET_CURRENT_USER, SET_ERRORS } from '../types';
+import { loading } from './loadingActions';
+
 import { AsyncStorage } from 'react-native';
 import setAuthToken from '../../config/axios/setAuthToken';
-import jwt_decode from 'jwt-decode';
 
 const _storeData = async (key, item) => {
 	try {
@@ -19,25 +22,38 @@ const _removeData = async (key) => {
 		// Error saving data
 	}
 };
-export const registerUser = (userData, history) => (dispatch) => {
+
+export const registerUser = (userData, navigation) => (dispatch) => {
+	dispatch(loading(true));
 	axios
 		.post('/api/customers', userData)
 		.then((res) => {
-			history.push('/login');
-			console.log(res);
+			dispatch(loading(false));
+
+			dispatch({
+				type: SET_ERRORS,
+				payload: {}
+			});
+
+			console.log(res.data);
+			navigation.goBack();
+			navigation.navigate('Login');
 		})
 		.catch((err) => {
+			dispatch(loading(false));
+
 			dispatch({
-				type: 'GET_ERRORS',
+				type: SET_ERRORS,
 				payload: err.response.data
 			});
-			console.log(err.response);
+			console.log(err.response.data);
 		});
 };
 
 export const loginUser = (userData) => (dispatch) => {
+	dispatch(loading(true));
 	axios
-		.post('http://teststoreapp-com.umbler.net/api/customers/login', userData)
+		.post('/api/customers/login', userData)
 		.then((res) => {
 			//Salvar no localstorage
 			const { token } = res.data;
@@ -49,16 +65,23 @@ export const loginUser = (userData) => (dispatch) => {
 			//Decodificar token para conseguir os dados do usuario
 			const decoded = jwt_decode(token);
 			console.log(token);
-			//Colocar o usuario na store
+
+			//Colocar o usuario na store(Redux)
+			dispatch(loading(false));
 			dispatch({
 				type: GET_CURRENT_USER,
 				payload: decoded
 			});
+			dispatch({
+				type: SET_ERRORS,
+				payload: {}
+			});
 		})
 		.catch((err) => {
 			console.log(err.response.data);
+			dispatch(loading(false));
 			dispatch({
-				type: 'GET_ERRORS',
+				type: SET_ERRORS,
 				payload: err.response.data
 			});
 		});
@@ -67,6 +90,7 @@ export const loginUser = (userData) => (dispatch) => {
 export const logoutUser = (history) => (dispatch) => {
 	_removeData('jwtToken');
 	setAuthToken(false);
+	dispatch(loading(false));
 	dispatch({
 		type: GET_CURRENT_USER,
 		payload: {}
